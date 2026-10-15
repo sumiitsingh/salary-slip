@@ -1,0 +1,909 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Salary Portal | Admin Workspace</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    :root {
+      --navy: #111b31;
+      --navy-soft: #1c2945;
+      --blue: #4357db;
+      --blue-dark: #3547c1;
+      --blue-light: #eef1ff;
+      --bg: #f4f6fb;
+      --white: #fff;
+      --text: #18233a;
+      --muted: #7a8499;
+      --line: #e7ebf3;
+      --green: #16845b;
+      --red: #c63d4b;
+      --shadow: 0 8px 28px rgba(25, 39, 75, .045);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { opacity: .6; cursor: wait; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 255px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      background: var(--navy);
+      color: white;
+      padding: 25px 16px;
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 7px 10px 30px;
+    }
+
+    .brand-mark {
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: linear-gradient(135deg, #7283ff, #4556db);
+      font-size: 21px;
+      font-weight: 900;
+      box-shadow: 0 6px 18px #4357db55;
+    }
+
+    .brand-name { font-size: 16px; font-weight: 800; letter-spacing: -.4px; }
+    .brand-sub { color: #9eabc4; font-size: 10px; margin-top: 5px; letter-spacing: 1.1px; text-transform: uppercase; }
+
+    .nav-caption {
+      padding: 9px 12px;
+      color: #7786a4;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.3px;
+    }
+
+    .nav-btn {
+      width: 100%;
+      border: 1px solid transparent;
+      background: transparent;
+      color: #aeb9cf;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px;
+      margin: 3px 0;
+      border-radius: 11px;
+      font-size: 13px;
+      font-weight: 650;
+      transition: .18s ease;
+    }
+
+    .nav-btn .nav-icon {
+      width: 23px;
+      text-align: center;
+      font-size: 17px;
+    }
+
+    .nav-btn:hover { background: #ffffff0b; color: #fff; }
+
+    .nav-btn.active {
+      color: #fff;
+      background: linear-gradient(100deg, #34477e, #27375f);
+      border-color: #425581;
+      box-shadow: inset 3px 0 #91a0ff;
+    }
+
+    .sidebar-bottom { margin-top: auto; padding-top: 24px; }
+
+    .admin-chip {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 13px 10px;
+      border-top: 1px solid #ffffff14;
+      margin-bottom: 8px;
+    }
+
+    .avatar {
+      width: 35px;
+      height: 35px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #34466d;
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .admin-label { min-width: 0; }
+    .admin-label strong { display: block; font-size: 12px; }
+    .admin-label span {
+      display: block;
+      color: #9eabc4;
+      font-size: 10px;
+      margin-top: 4px;
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .main { min-width: 0; }
+
+    .topbar {
+      min-height: 82px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      padding: 18px 34px;
+      background: #ffffffed;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      backdrop-filter: blur(12px);
+    }
+
+    .eyebrow {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+
+    .topbar h2 { margin: 0; font-size: 20px; letter-spacing: -.5px; }
+    .topbar p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+
+    .content {
+      max-width: 1600px;
+      margin: auto;
+      padding: 31px 34px 50px;
+    }
+
+    .page { display: none; animation: fadeIn .2s ease; }
+    .page.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 25px;
+    }
+
+    .page-heading h1 {
+      font-size: 27px;
+      line-height: 1.2;
+      letter-spacing: -1px;
+      margin: 0;
+    }
+
+    .page-heading p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+      margin: 9px 0 0;
+      max-width: 700px;
+    }
+
+    .muted { color: var(--muted); line-height: 1.7; }
+    .small { font-size: 11px; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 17px;
+      margin-bottom: 23px;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .stat-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .stat-label { color: var(--muted); font-size: 12px; font-weight: 650; }
+    .stat-icon {
+      width: 37px; height: 37px; border-radius: 11px;
+      display: grid; place-items: center; background: var(--blue-light);
+      color: var(--blue); font-size: 17px;
+    }
+
+    .stat-value { font-size: 31px; font-weight: 850; letter-spacing: -1.2px; margin-top: 15px; }
+    .stat-note { color: var(--muted); font-size: 11px; margin-top: 6px; }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 21px 24px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .panel-head h3 { margin: 0; font-size: 15px; letter-spacing: -.25px; }
+    .panel-head p { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
+    .panel-body { padding: 24px; min-width: 0; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .field { min-width: 0; }
+    .field.full { grid-column: 1 / -1; }
+
+    label {
+      display: block;
+      color: #39465e;
+      font-size: 12px;
+      font-weight: 750;
+      margin-bottom: 8px;
+    }
+
+    .required { color: var(--red); }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid #dce2ed;
+      background: #fff;
+      border-radius: 10px;
+      padding: 12px 13px;
+      color: var(--text);
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+      font-size: 13px;
+      min-width: 0;
+    }
+
+    textarea { min-height: 92px; resize: vertical; line-height: 1.6; }
+    input::placeholder, textarea::placeholder { color: #a2aabb; }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px #4357db16;
+    }
+
+    input[type="checkbox"] { width: auto; accent-color: var(--blue); }
+    input[type="file"] { padding: 9px; background: #fafbfe; }
+
+    .help { color: var(--muted); font-size: 11px; line-height: 1.6; margin-top: 7px; }
+
+    .btn {
+      border: 1px solid var(--blue);
+      background: var(--blue);
+      color: white;
+      padding: 11px 16px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 750;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: .18s ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover { background: var(--blue-dark); border-color: var(--blue-dark); transform: translateY(-1px); }
+    .btn.secondary { background: white; color: #34415a; border-color: #dce2ed; }
+    .btn.secondary:hover { background: #f5f7ff; border-color: #c8d1ff; color: var(--blue); }
+    .btn.danger { background: #fff3f3; color: #b42332; border-color: #f7d5d8; }
+    .btn.danger:hover { background: #ffe6e8; }
+    .btn.success { background: #eaf8f0; color: #13744c; border-color: #c8eed9; }
+    .btn.small { padding: 7px 10px; font-size: 11px; border-radius: 7px; }
+    .btn:disabled { transform: none; }
+
+    .actions { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 22px; }
+    .actions.tight { margin: 0; }
+
+    .notice {
+      border: 1px solid #dce4ff;
+      background: #f3f5ff;
+      color: #3548a9;
+      border-radius: 11px;
+      padding: 13px 15px;
+      font-size: 12px;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .message { margin: 13px 0 0; font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
+    .message:empty { display: none; }
+    .message.success { color: var(--green); }
+    .message.error { color: var(--red); }
+
+    .toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .toolbar input, .toolbar select { width: auto; min-width: 170px; }
+    .search-input { max-width: 330px; }
+
+    .table-wrap { overflow-x: auto; width: 100%; }
+    table { border-collapse: collapse; width: 100%; min-width: 700px; }
+    th {
+      text-align: left; padding: 14px 16px; white-space: nowrap;
+      color: #78849a; background: #f8f9fc; border-bottom: 1px solid var(--line);
+      font-size: 10px; text-transform: uppercase; letter-spacing: .7px;
+    }
+    td { padding: 15px 16px; border-bottom: 1px solid #edf0f5; font-size: 12px; vertical-align: middle; }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:hover td { background: #fbfcff; }
+    .primary-cell { font-weight: 750; color: #202d46; }
+    .sub-cell { display: block; margin-top: 5px; font-size: 11px; color: var(--muted); overflow-wrap: anywhere; }
+
+    .status {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 9px; border-radius: 20px; font-size: 10px; font-weight: 800;
+      background: #eaf8f0; color: #14794f; white-space: nowrap;
+    }
+    .status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .status.inactive { color: #8b94a6; background: #f0f2f6; }
+    .status.pending { color: #a46b13; background: #fff6df; }
+
+    .company-current {
+      border: 1px solid #d9e2ff;
+      background: linear-gradient(120deg, #f4f6ff, #fff);
+      border-radius: 13px;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+    .company-current h3 { margin: 0 0 7px; font-size: 16px; }
+    .company-current p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    .company-current .current-tag { color: var(--blue); font-size: 10px; font-weight: 850; letter-spacing: .7px; text-transform: uppercase; }
+
+    .logo-preview {
+      width: 112px; height: 90px; object-fit: contain;
+      background: #f8f9fc; border: 1px dashed #d5dce8;
+      border-radius: 11px; padding: 7px; margin-top: 12px;
+    }
+
+    .salary-line {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 150px auto;
+      gap: 9px;
+      align-items: center;
+      margin: 9px 0;
+    }
+
+    .salary-line input { min-width: 0; }
+    .line-remove {
+      width: 37px; height: 39px; border: 1px solid #f0d5d8;
+      background: #fff5f5; color: #b42332; border-radius: 9px;
+      font-weight: 800;
+    }
+
+    .totals {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 13px;
+      margin-top: 22px;
+    }
+
+    .total-box { padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: #fafbfe; }
+    .total-box span { display: block; color: var(--muted); font-size: 11px; font-weight: 700; }
+    .total-box strong { display: block; margin-top: 9px; font-size: 21px; letter-spacing: -.5px; }
+    .total-box.net { background: #effaf4; border-color: #d5f0e0; }
+    .total-box.net strong { color: #13764b; }
+
+    .empty-state { padding: 35px 18px; text-align: center; color: var(--muted); font-size: 12px; line-height: 1.8; }
+    .empty-icon { width: 43px; height: 43px; display: grid; place-items: center; margin: 0 auto 12px; border-radius: 13px; background: var(--blue-light); color: var(--blue); font-size: 20px; }
+
+    .quick-links { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
+    .quick-link {
+      display: flex; gap: 13px; align-items: center; text-align: left;
+      background: white; border: 1px solid var(--line); border-radius: 13px;
+      padding: 17px; color: var(--text); transition: .18s ease;
+    }
+    .quick-link:hover { border-color: #cbd3ff; transform: translateY(-2px); box-shadow: var(--shadow); }
+    .quick-link .q-icon { width: 39px; height: 39px; display: grid; place-items: center; border-radius: 11px; background: var(--blue-light); color: var(--blue); font-size: 18px; flex-shrink: 0; }
+    .quick-link strong { display: block; font-size: 12px; }
+    .quick-link small { display: block; color: var(--muted); font-size: 10px; margin-top: 5px; }
+
+    @media (max-width: 1100px) {
+      .app { grid-template-columns: 220px minmax(0, 1fr); }
+      .sidebar { padding: 20px 12px; }
+      .content { padding: 25px 22px 40px; }
+      .topbar { padding: 17px 22px; }
+      .panel-body { padding: 20px; }
+    }
+
+    @media (max-width: 760px) {
+      .app { display: block; }
+      .sidebar { position: static; height: auto; padding: 10px 12px; }
+      .brand { padding: 5px 8px 13px; }
+      .brand-mark { width: 35px; height: 35px; }
+      .nav-caption, .sidebar-bottom { display: none; }
+      .sidebar nav { display: flex; overflow-x: auto; gap: 5px; padding-bottom: 2px; }
+      .nav-btn { width: auto; min-width: max-content; margin: 0; padding: 10px 12px; font-size: 11px; }
+      .nav-btn .nav-icon { width: auto; }
+      .topbar { position: static; min-height: 70px; padding: 14px 16px; }
+      .topbar h2 { font-size: 17px; }
+      .content { padding: 22px 14px 35px; }
+      .page-heading h1 { font-size: 23px; }
+      .stats { gap: 10px; }
+      .stat-card { padding: 15px; }
+      .stat-value { font-size: 25px; }
+      .stat-icon { width: 31px; height: 31px; }
+      .panel-head { padding: 17px; }
+      .panel-body { padding: 17px; }
+      .form-grid { grid-template-columns: 1fr; gap: 15px; }
+      .field.full { grid-column: auto; }
+      .quick-links { grid-template-columns: 1fr; }
+      .company-current { align-items: flex-start; flex-direction: column; }
+    }
+
+    @media (max-width: 440px) {
+      .stats { grid-template-columns: 1fr; }
+      .totals { grid-template-columns: 1fr; }
+      .salary-line { grid-template-columns: minmax(0, 1fr) 95px 34px; gap: 5px; }
+      .salary-line input { padding: 10px 8px; font-size: 12px; }
+      .line-remove { width: 32px; }
+      .toolbar input, .toolbar select { width: 100%; min-width: 0; max-width: none; }
+      .toolbar { width: 100%; }
+      .page-heading { align-items: flex-start; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">S</div>
+      <div>
+        <div class="brand-name">Salary Portal</div>
+        <div class="brand-sub">Admin workspace</div>
+      </div>
+    </div>
+
+    <div class="nav-caption">WORKSPACE</div>
+    <nav>
+      <button class="nav-btn active" data-page="overview"><span class="nav-icon">▦</span> Overview</button>
+      <button class="nav-btn" data-page="companies"><span class="nav-icon">▣</span> Companies</button>
+      <button class="nav-btn" data-page="employees"><span class="nav-icon">♙</span> Employees</button>
+      <button class="nav-btn" data-page="create-slip"><span class="nav-icon">▤</span> Salary Slip Creation</button>
+      <button class="nav-btn" data-page="saved-slips"><span class="nav-icon">▧</span> Saved Salary Slips</button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="admin-chip">
+        <div class="avatar">A</div>
+        <div class="admin-label">
+          <strong>Administrator</strong>
+          <span id="sidebarEmail">Checking account…</span>
+        </div>
+      </div>
+      <button class="nav-btn" id="logoutBtn"><span class="nav-icon">↪</span> Sign out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Salary Portal / Admin</div>
+        <h2 id="topTitle">Overview</h2>
+        <p id="topSubtitle">Your payroll activity at a glance.</p>
+      </div>
+      <button class="btn secondary" id="topLogoutBtn" type="button">Sign out ↗</button>
+    </header>
+
+    <div class="content">
+      <div id="globalMessage" class="message" role="status" aria-live="polite"></div>
+
+      <!-- OVERVIEW -->
+      <section class="page active" id="page-overview">
+        <div class="page-heading">
+          <div>
+            <h1>Good to see you, Admin</h1>
+            <p>Manage your companies, employee records and payroll from one organised workspace.</p>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-top"><span class="stat-label">Total companies</span><span class="stat-icon">▣</span></div>
+            <div class="stat-value" id="companyCount">—</div>
+            <div class="stat-note">Companies in your workspace</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-top"><span class="stat-label">Active employees</span><span class="stat-icon">♙</span></div>
+            <div class="stat-value" id="employeeCount">—</div>
+            <div class="stat-note">Employee records currently active</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-top"><span class="stat-label">Salary slips saved</span><span class="stat-icon">▤</span></div>
+            <div class="stat-value" id="slipCount">—</div>
+            <div class="stat-note">Saved payroll records</div>
+          </div>
+        </div>
+
+        <div class="company-current">
+          <div>
+            <div class="current-tag">Current company</div>
+            <h3 id="currentCompanyName" style="margin-top:8px">Loading company…</h3>
+            <p id="currentCompanyDetails">Your selected company details will appear here.</p>
+          </div>
+          <button class="btn" type="button" data-go="companies">Manage companies →</button>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Get started</h3><p>Jump directly to the task you want to complete.</p></div>
+          </div>
+          <div class="panel-body">
+            <div class="quick-links">
+              <button class="quick-link" type="button" data-go="companies">
+                <span class="q-icon">▣</span>
+                <span><strong>Company details</strong><small>Add a company or update its logo</small></span>
+              </button>
+              <button class="quick-link" type="button" data-go="employees">
+                <span class="q-icon">♙</span>
+                <span><strong>Employee records</strong><small>Add, edit or activate employees</small></span>
+              </button>
+              <button class="quick-link" type="button" data-go="create-slip">
+                <span class="q-icon">▤</span>
+                <span><strong>Create salary slip</strong><small>Prepare and save monthly payroll</small></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMPANIES: EXISTING LIST FIRST, FORM BELOW -->
+      <section class="page" id="page-companies">
+        <div class="page-heading">
+          <div>
+            <h1>Companies</h1>
+            <p>Manage company profiles, registered details and logos. Select one company as the current company for payroll.</p>
+          </div>
+          <button class="btn" type="button" id="newCompanyBtn">＋ Add company</button>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Your companies</h3><p>Existing records appear here before the creation form.</p></div>
+            <input id="companySearch" class="search-input" placeholder="Search company…" aria-label="Search companies">
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Company</th><th>GSTIN / TAN</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="companiesTable"><tr><td colspan="4"><div class="empty-state">Loading companies…</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel" id="companyFormPanel">
+          <div class="panel-head">
+            <div><h3 id="companyFormTitle">Add a company</h3><p>Enter the registered details that should appear on salary slips.</p></div>
+            <button type="button" class="btn secondary small" id="resetCompanyBtn">Clear form</button>
+          </div>
+          <div class="panel-body">
+            <form id="companyForm">
+              <input type="hidden" id="companyId">
+              <div class="form-grid">
+                <div class="field full">
+                  <label for="companyName">Company / legal name <span class="required">*</span></label>
+                  <input id="companyName" required maxlength="180" placeholder="e.g. Example Services Private Limited">
+                </div>
+                <div class="field full">
+                  <label for="companyAddress">Full registered address <span class="required">*</span></label>
+                  <textarea id="companyAddress" required maxlength="1000" placeholder="Building, street, area, city, state, PIN code"></textarea>
+                </div>
+                <div class="field">
+                  <label for="companyGstin">GSTIN</label>
+                  <input id="companyGstin" maxlength="30" placeholder="Enter GSTIN">
+                </div>
+                <div class="field">
+                  <label for="companyTan">TAN</label>
+                  <input id="companyTan" maxlength="30" placeholder="Enter TAN">
+                </div>
+                <div class="field full">
+                  <label for="companyLogo">Company logo</label>
+                  <input id="companyLogo" type="file" accept="image/png,image/jpeg,image/webp">
+                  <p class="help">PNG, JPG or WebP · Maximum 2 MB. The logo is stored with this company and used on its salary slips.</p>
+                  <img id="logoPreview" class="logo-preview" alt="Company logo preview" hidden>
+                  <div class="actions">
+                    <button type="button" class="btn secondary" id="removeLogoBtn">Remove current logo</button>
+                    <label style="display:flex;align-items:center;gap:8px;margin:0;padding:10px 0">
+                      <input type="checkbox" id="makeCurrent"> Make this the current company
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="actions">
+                <button class="btn" id="saveCompanyBtn" type="submit">Save company</button>
+                <button class="btn secondary" type="button" id="cancelCompanyEditBtn" hidden>Cancel editing</button>
+              </div>
+              <p id="companyMessage" class="message" role="status"></p>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- EMPLOYEES: EXISTING LIST FIRST, FORM BELOW -->
+      <section class="page" id="page-employees">
+        <div class="page-heading">
+          <div>
+            <h1>Employees</h1>
+            <p>Maintain employee records separately from activation. Create the employee first; generate an activation code only when you choose to.</p>
+          </div>
+          <button class="btn" type="button" id="newEmployeeBtn">＋ Add employee</button>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Employee directory</h3><p>Search, edit, delete or generate an activation code for an employee.</p></div>
+            <div class="toolbar">
+              <input id="employeeSearch" class="search-input" placeholder="Search name, code, email…">
+              <select id="employeeFilterCompany" aria-label="Filter employees by company"><option value="">All companies</option></select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Employee</th><th>Code</th><th>Company</th><th>Monthly salary</th><th>Account</th><th>Actions</th></tr></thead>
+              <tbody id="employeesTable"><tr><td colspan="6"><div class="empty-state">Loading employees…</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel" id="employeeFormPanel">
+          <div class="panel-head">
+            <div><h3 id="employeeFormTitle">Add an employee</h3><p>Employer Code field has been removed. The employee code belongs to the selected company.</p></div>
+            <button type="button" class="btn secondary small" id="resetEmployeeBtn">Clear form</button>
+          </div>
+          <div class="panel-body">
+            <form id="employeeForm">
+              <input type="hidden" id="employeeId">
+              <div class="form-grid">
+                <div class="field">
+                  <label for="employeeCompany">Company <span class="required">*</span></label>
+                  <select id="employeeCompany" required><option value="">Select company</option></select>
+                </div>
+                <div class="field">
+                  <label for="employeeCode">Employee code <span class="required">*</span></label>
+                  <input id="employeeCode" required maxlength="50" placeholder="e.g. SS0001">
+                  <p class="help">For a new company, enter the first code manually. The next code is suggested for that company.</p>
+                </div>
+                <div class="field">
+                  <label for="employeeName">Full name <span class="required">*</span></label>
+                  <input id="employeeName" required maxlength="180" placeholder="Employee's full name">
+                </div>
+                <div class="field">
+                  <label for="employeeEmail">Email <span class="required">*</span></label>
+                  <input id="employeeEmail" type="email" required maxlength="254" placeholder="employee@example.com">
+                </div>
+                <div class="field">
+                  <label for="employeeMobile">Mobile</label>
+                  <input id="employeeMobile" type="tel" maxlength="30" placeholder="Mobile number">
+                </div>
+                <div class="field">
+                  <label for="employeeDesignation">Designation</label>
+                  <input id="employeeDesignation" maxlength="120" placeholder="e.g. Accountant">
+                </div>
+                <div class="field">
+                  <label for="employeeDepartment">Department</label>
+                  <input id="employeeDepartment" maxlength="120" placeholder="e.g. Finance">
+                </div>
+                <div class="field">
+                  <label for="employeeJoining">Joining date</label>
+                  <input id="employeeJoining" type="date">
+                </div>
+                <div class="field">
+                  <label for="employeeMonthly">Monthly salary (₹) <span class="required">*</span></label>
+                  <input id="employeeMonthly" type="number" min="0" step="0.01" value="0" required>
+                </div>
+                <div class="field">
+                  <label for="employeeCtc">Annual CTC (₹)</label>
+                  <input id="employeeCtc" type="number" min="0" step="0.01" placeholder="Optional">
+                </div>
+                <div class="field">
+                  <label for="employeeUan">PF / UAN number</label>
+                  <input id="employeeUan" maxlength="40" placeholder="Optional">
+                </div>
+                <div class="field">
+                  <label for="employeeEsic">ESIC number</label>
+                  <input id="employeeEsic" maxlength="40" placeholder="Optional">
+                </div>
+              </div>
+              <div class="notice" style="margin-top:20px;margin-bottom:0">
+                Saving this form only creates or updates the employee record. It does not automatically create an activation code.
+              </div>
+              <div class="actions">
+                <button class="btn" id="saveEmployeeBtn" type="submit">Save employee</button>
+                <button class="btn secondary" type="button" id="cancelEmployeeEditBtn" hidden>Cancel editing</button>
+              </div>
+              <p id="employeeMessage" class="message" role="status"></p>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- CREATE SALARY SLIP -->
+      <section class="page" id="page-create-slip">
+        <div class="page-heading">
+          <div>
+            <h1>Salary Slip Creation</h1>
+            <p>Create a salary slip for one employee and one month. Saving does not automatically download a PDF.</p>
+          </div>
+        </div>
+
+        <div class="company-current">
+          <div>
+            <div class="current-tag">Payroll company</div>
+            <h3 id="salaryCurrentCompanyName" style="margin-top:8px">Select a company</h3>
+            <p id="salaryCurrentCompanyDetails">Company details will appear here.</p>
+          </div>
+          <button class="btn secondary" type="button" data-go="companies">Change company →</button>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Prepare payroll</h3><p>Choose the employee, salary month and payment details.</p></div>
+          </div>
+          <div class="panel-body">
+            <form id="salaryForm">
+              <div class="form-grid">
+                <div class="field full">
+                  <label for="salaryCompany">Company <span class="required">*</span></label>
+                  <select id="salaryCompany" required><option value="">Select company</option></select>
+                </div>
+                <div class="field full">
+                  <label for="salaryEmployeeSearch">Find employee by name or code</label>
+                  <input id="salaryEmployeeSearch" type="search" placeholder="Type an employee name or code…">
+                </div>
+                <div class="field full">
+                  <label for="salaryEmployee">Employee <span class="required">*</span></label>
+                  <select id="salaryEmployee" required><option value="">Select employee</option></select>
+                </div>
+                <div class="field full" id="salaryEmployeeSummary" style="border:1px solid var(--line);background:#fafbfe;border-radius:11px;padding:15px;color:var(--muted);font-size:12px;line-height:1.8">
+                  Select an employee to view their details.
+                </div>
+                <div class="field">
+                  <label for="salaryMonth">Salary month <span class="required">*</span></label>
+                  <input id="salaryMonth" type="month" required>
+                </div>
+                <div class="field">
+                  <label for="salaryPaymentDate">Payment date</label>
+                  <input id="salaryPaymentDate" type="date">
+                </div>
+                <div class="field">
+                  <label for="salaryPaymentMode">Payment mode</label>
+                  <select id="salaryPaymentMode">
+                    <option value="">Select payment mode</option>
+                    <option>Bank Transfer</option>
+                    <option>NEFT / RTGS</option>
+                    <option>UPI</option>
+                    <option>Cheque</option>
+                    <option>Cash</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="salaryRemarks">Remarks</label>
+                  <input id="salaryRemarks" maxlength="300" placeholder="Optional note">
+                </div>
+              </div>
+
+              <div style="margin-top:29px">
+                <div class="panel-head" style="padding:0 0 15px;border:0">
+                  <div><h3>Earnings</h3><p>Enter the earnings included in this month's salary.</p></div>
+                  <button type="button" class="btn secondary small" id="addEarningBtn">＋ Add earning</button>
+                </div>
+                <div id="earningsList"></div>
+              </div>
+
+              <div style="margin-top:27px">
+                <div class="panel-head" style="padding:0 0 15px;border:0">
+                  <div><h3>Deductions</h3><p>Enter applicable deductions.</p></div>
+                  <button type="button" class="btn secondary small" id="addDeductionBtn">＋ Add deduction</button>
+                </div>
+                <div id="deductionsList"></div>
+              </div>
+
+              <div class="totals">
+                <div class="total-box"><span>Gross earnings</span><strong id="grossTotal">₹0.00</strong></div>
+                <div class="total-box"><span>Total deductions</span><strong id="deductionTotal">₹0.00</strong></div>
+                <div class="total-box net"><span>Net salary</span><strong id="netTotal">₹0.00</strong></div>
+              </div>
+
+              <div class="actions">
+                <button class="btn secondary" type="button" id="calculateBtn">Recalculate</button>
+                <button class="btn" type="submit" id="saveSalaryBtn">Save salary slip</button>
+                <button class="btn secondary" type="button" id="resetSalaryBtn">Clear form</button>
+              </div>
+              <p id="salaryMessage" class="message" role="status"></p>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- SAVED SLIPS: LIST ONLY -->
+      <section class="page" id="page-saved-slips">
+        <div class="page-heading">
+          <div>
+            <h1>Saved Salary Slips</h1>
+            <p>Find previously saved slips and download their PDFs when needed. New salary slips are created in Salary Slip Creation.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Payroll records</h3><p>Filter by company or salary month.</p></div>
+            <div class="toolbar">
+              <select id="slipFilterCompany" aria-label="Filter slips by company"><option value="">All companies</option></select>
+              <input id="slipFilterMonth" type="month" aria-label="Filter slips by month">
+              <button type="button" class="btn secondary" id="clearSlipFiltersBtn">Clear filters</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Salary month</th><th>Employee</th><th>Company</th><th>Net salary</th><th>Status</th><th>Action</th></tr></thead>
+              <tbody id="slipsTable"><tr><td colspan="6"><div class="empty-state">Loading salary slips…</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script src="supabase.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

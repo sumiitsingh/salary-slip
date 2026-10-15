@@ -1,0 +1,1117 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090d18">
+  <meta name="description" content="Professional salary slip preparation services for employees and businesses. Get in touch for salary slip assistance.">
+  <title>SalaryCraft — Professional Salary Slip Services</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #090d18;
+      --panel: #111827;
+      --panel-light: #172033;
+      --gold: #d8b477;
+      --gold-light: #f3d9a7;
+      --white: #f7f8fc;
+      --muted: #9ba6ba;
+      --border: rgba(255,255,255,.10);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: "DM Sans", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    button, a { -webkit-tap-highlight-color: transparent; }
+
+    .container {
+      width: min(1160px, calc(100% - 48px));
+      margin: auto;
+    }
+
+    .top-glow {
+      position: absolute;
+      top: -260px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 850px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(190,151,86,.13), transparent 68%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Navigation */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(9,13,24,.84);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .navbar {
+      height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .brand-icon {
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(216,180,119,.6);
+      border-radius: 13px;
+      color: var(--gold-light);
+      font-family: Manrope, sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      background: linear-gradient(145deg, #253047, #111827);
+    }
+
+    .brand-name {
+      font-family: Manrope, sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -.6px;
+    }
+
+    .brand-name span { color: var(--gold); }
+
+    .brand-caption {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      margin-top: -2px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-links > a:not(.login-btn) {
+      font-size: 13px;
+      color: #c0c8d6;
+      transition: color .2s;
+    }
+
+    .nav-links > a:not(.login-btn):hover { color: var(--gold-light); }
+
+    .login-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 12px 20px;
+      border: 1px solid rgba(216,180,119,.55);
+      border-radius: 9px;
+      color: var(--gold-light);
+      font-size: 13px;
+      font-weight: 700;
+      transition: background .25s, color .25s, transform .25s;
+    }
+
+    .login-btn:hover {
+      background: var(--gold);
+      color: #111827;
+      transform: translateY(-2px);
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 43px;
+      height: 43px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: white;
+      font-size: 23px;
+      cursor: pointer;
+    }
+
+    /* Hero */
+
+    .hero {
+      position: relative;
+      padding: 105px 0 95px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      align-items: center;
+      gap: 70px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(216,180,119,.25);
+      background: rgba(216,180,119,.06);
+      border-radius: 50px;
+      padding: 8px 14px;
+      color: var(--gold-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+    }
+
+    .eyebrow-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--gold);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--gold);
+    }
+
+    h1, h2, h3 { font-family: Manrope, sans-serif; }
+
+    h1 {
+      margin-top: 27px;
+      max-width: 650px;
+      font-size: clamp(43px, 5.1vw, 68px);
+      line-height: 1.12;
+      letter-spacing: -3.3px;
+      font-weight: 800;
+    }
+
+    .gold-text {
+      color: var(--gold);
+      background: linear-gradient(100deg, #f1d8a7, #c8a166);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-description {
+      max-width: 495px;
+      color: var(--muted);
+      margin-top: 24px;
+      font-size: 16px;
+      line-height: 1.9;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    .btn-primary, .btn-secondary {
+      min-height: 52px;
+      padding: 0 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 700;
+      transition: .25s;
+    }
+
+    .btn-primary {
+      color: #15120d;
+      background: linear-gradient(120deg, #f0d8a7, #c6a064);
+      box-shadow: 0 8px 30px rgba(198,160,100,.13);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(198,160,100,.25);
+    }
+
+    .btn-secondary {
+      color: #e2e7f0;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.025);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--gold);
+      color: var(--gold-light);
+    }
+
+    .hero-note {
+      margin-top: 24px;
+      color: #77839a;
+      font-size: 12px;
+    }
+
+    .hero-note span { color: var(--gold); margin-right: 6px; }
+
+    /* Decorative salary slip preview */
+
+    .preview-wrap {
+      position: relative;
+      padding: 20px 10px 35px;
+    }
+
+    .preview-glow {
+      position: absolute;
+      inset: 5% -5%;
+      background: radial-gradient(ellipse, rgba(197,159,96,.13), transparent 68%);
+      z-index: -1;
+    }
+
+    .floating-tag {
+      position: absolute;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 12px;
+      background: rgba(20,29,45,.96);
+      box-shadow: 0 15px 40px rgba(0,0,0,.25);
+      font-size: 11px;
+      color: #cbd3e1;
+    }
+
+    .floating-tag strong {
+      display: block;
+      color: white;
+      font-size: 12px;
+    }
+
+    .tag-icon {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: rgba(216,180,119,.12);
+      color: var(--gold-light);
+      font-size: 17px;
+    }
+
+    .tag-one { top: 3px; right: -15px; }
+    .tag-two { bottom: 4px; left: -23px; }
+
+    .slip {
+      max-width: 405px;
+      margin: auto;
+      padding: 27px;
+      border-radius: 17px;
+      background: #f9fafc;
+      color: #172033;
+      box-shadow: 0 35px 100px rgba(0,0,0,.38);
+      transform: rotate(1.5deg);
+    }
+
+    .slip-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      padding-bottom: 19px;
+      border-bottom: 1px solid #e1e5eb;
+    }
+
+    .slip-logo {
+      width: 39px;
+      height: 39px;
+      display: grid;
+      place-items: center;
+      background: #172033;
+      color: var(--gold-light);
+      border-radius: 9px;
+      font-family: Manrope, sans-serif;
+      font-weight: 800;
+    }
+
+    .slip-company {
+      flex: 1;
+      font-family: Manrope, sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .slip-company small {
+      display: block;
+      font-family: "DM Sans", sans-serif;
+      font-weight: 400;
+      font-size: 9px;
+      color: #7a8495;
+      margin-top: 3px;
+    }
+
+    .slip-label {
+      background: #f0e5d2;
+      color: #785a2d;
+      border-radius: 5px;
+      padding: 6px 8px;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: .7px;
+    }
+
+    .slip-period {
+      margin: 18px 0;
+      font-size: 11px;
+      color: #647086;
+    }
+
+    .slip-period strong { color: #172033; }
+
+    .slip-person {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      padding: 15px;
+      background: #f0f3f7;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .slip-field small {
+      display: block;
+      font-size: 8px;
+      color: #7a8495;
+      margin-bottom: 4px;
+    }
+
+    .slip-field strong {
+      font-size: 10px;
+      overflow-wrap: anywhere;
+    }
+
+    .slip-table-title {
+      font-size: 10px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .slip-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #e9ecf1;
+      font-size: 10px;
+      color: #586478;
+    }
+
+    .slip-row b { color: #172033; }
+
+    .slip-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      margin-top: 17px;
+      background: #172033;
+      color: #fff;
+      border-radius: 8px;
+    }
+
+    .slip-total small {
+      display: block;
+      color: #c1c9d7;
+      font-size: 9px;
+    }
+
+    .slip-total strong {
+      font-family: Manrope, sans-serif;
+      font-size: 20px;
+      color: var(--gold-light);
+    }
+
+    .slip-footer {
+      margin-top: 15px;
+      color: #8b94a4;
+      font-size: 8px;
+      text-align: center;
+    }
+
+    /* Trust strip */
+
+    .trust-strip {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,.015);
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      padding: 27px 0;
+    }
+
+    .trust-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 18px;
+      border-right: 1px solid var(--border);
+    }
+
+    .trust-item:last-child { border-right: none; }
+
+    .trust-symbol { color: var(--gold); font-size: 22px; }
+
+    .trust-item strong {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .trust-item small {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 3px;
+    }
+
+    /* Common sections */
+
+    section.content-section { padding: 100px 0; }
+
+    .section-heading {
+      max-width: 620px;
+      margin: 0 auto 50px;
+      text-align: center;
+    }
+
+    .section-kicker {
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+    }
+
+    .section-heading h2 {
+      margin-top: 14px;
+      font-size: clamp(30px, 4vw, 43px);
+      letter-spacing: -1.7px;
+      line-height: 1.2;
+    }
+
+    .section-heading p {
+      margin-top: 15px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .service-card {
+      padding: 30px;
+      background: linear-gradient(145deg, #131c2d, #0e1422);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      transition: transform .25s, border-color .25s;
+    }
+
+    .service-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(216,180,119,.45);
+    }
+
+    .service-icon {
+      width: 49px;
+      height: 49px;
+      display: grid;
+      place-items: center;
+      color: var(--gold-light);
+      background: rgba(216,180,119,.10);
+      border: 1px solid rgba(216,180,119,.17);
+      border-radius: 12px;
+      font-size: 22px;
+    }
+
+    .service-card h3 {
+      font-size: 17px;
+      margin-top: 23px;
+    }
+
+    .service-card p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.85;
+      margin-top: 12px;
+    }
+
+    /* How it works */
+
+    .process-section {
+      background: linear-gradient(180deg, transparent, rgba(255,255,255,.018), transparent);
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 35px;
+    }
+
+    .step { position: relative; padding: 10px 10px 10px 0; }
+
+    .step-number {
+      font-family: Manrope, sans-serif;
+      font-size: 38px;
+      font-weight: 800;
+      color: rgba(216,180,119,.38);
+      letter-spacing: -2px;
+    }
+
+    .step h3 { margin-top: 12px; font-size: 17px; }
+
+    .step p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.85;
+    }
+
+    /* Contact */
+
+    .contact-section { padding: 50px 0 105px; }
+
+    .contact-box {
+      position: relative;
+      overflow: hidden;
+      padding: 60px 55px;
+      border: 1px solid rgba(216,180,119,.26);
+      border-radius: 22px;
+      background:
+        radial-gradient(ellipse at 100% 0%, rgba(216,180,119,.12), transparent 45%),
+        linear-gradient(135deg, #151e30, #0f1523);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .contact-box h2 {
+      max-width: 600px;
+      font-size: clamp(30px, 4vw, 43px);
+      line-height: 1.2;
+      letter-spacing: -1.5px;
+    }
+
+    .contact-box p {
+      color: var(--muted);
+      margin-top: 15px;
+      font-size: 14px;
+      line-height: 1.8;
+      max-width: 550px;
+    }
+
+    .contact-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 190px;
+    }
+
+    /* Footer */
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+    }
+
+    .footer-copy {
+      color: #77839a;
+      font-size: 11px;
+    }
+
+    .social-links {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .social-links a {
+      font-size: 12px;
+      color: #c0c8d6;
+      transition: color .2s;
+    }
+
+    .social-links a:hover { color: var(--gold-light); }
+
+    /* Motion */
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-copy { animation: rise .7s ease both; }
+    .preview-wrap { animation: rise .8s .12s ease both; }
+
+    /* Responsive */
+
+    @media (max-width: 950px) {
+      .hero-grid { gap: 35px; }
+      h1 { font-size: 52px; letter-spacing: -2.5px; }
+      .tag-one { right: -5px; }
+      .tag-two { left: -5px; }
+      .contact-box { padding: 45px 35px; }
+    }
+
+    @media (max-width: 760px) {
+      .container { width: min(100% - 36px, 560px); }
+      .navbar { height: 72px; }
+      .menu-toggle { display: grid; place-items: center; }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 71px;
+        left: 0;
+        right: 0;
+        padding: 20px 22px 24px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        background: #0d1321;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .nav-links.open { display: flex; }
+
+      .nav-links > a:not(.login-btn) {
+        padding: 14px 5px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .nav-links .login-btn { margin-top: 15px; }
+
+      .hero { padding: 70px 0 60px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 45px; }
+      h1 { font-size: clamp(43px, 10vw, 58px); letter-spacing: -2.5px; }
+      .hero-description { font-size: 14px; }
+      .preview-wrap { width: 100%; max-width: 480px; margin: auto; }
+      .slip { padding: 23px; }
+      .tag-one { right: -2px; }
+      .tag-two { left: -2px; }
+
+      .trust-grid { grid-template-columns: 1fr; padding: 10px 0; }
+      .trust-item {
+        justify-content: flex-start;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 17px 10px;
+      }
+      .trust-item:last-child { border-bottom: none; }
+
+      section.content-section { padding: 75px 0; }
+      .section-heading { margin-bottom: 35px; }
+      .services-grid, .steps-grid { grid-template-columns: 1fr; gap: 15px; }
+      .service-card { padding: 25px; }
+      .steps-grid { gap: 25px; }
+
+      .contact-section { padding: 20px 0 75px; }
+      .contact-box { grid-template-columns: 1fr; gap: 28px; padding: 34px 25px; }
+      .contact-actions { flex-direction: row; flex-wrap: wrap; }
+      .contact-actions > a { flex: 1; }
+
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .social-links { gap: 17px; }
+    }
+
+    @media (max-width: 390px) {
+      .brand-name { font-size: 16px; }
+      .brand-icon { width: 39px; height: 39px; }
+      .hero-actions { flex-direction: column; }
+      .hero-actions a { width: 100%; }
+      .slip { padding: 18px; }
+      .floating-tag { padding: 10px; }
+      .tag-two { bottom: -4px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top-glow"></div>
+
+  <header>
+    <div class="container navbar">
+      <a class="brand" href="#home" aria-label="SalaryCraft home">
+        <div class="brand-icon">S.</div>
+        <div>
+          <div class="brand-name">Salary<span>Craft</span></div>
+          <span class="brand-caption">Professional Services</span>
+        </div>
+      </a>
+
+      <button class="menu-toggle" id="menuToggle"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+        aria-controls="navLinks">☰</button>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="#home">Home</a>
+        <a href="#services">Services</a>
+        <a href="#process">How It Works</a>
+        <a href="#contact">Contact</a>
+        <a class="login-btn" href="login.html">
+          Login <span aria-hidden="true">↗</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">
+            <span class="eyebrow-dot"></span>
+            Salary Slip Assistance
+          </div>
+
+          <h1>
+            Payroll documents.<br>
+            Made <span class="gold-text">professional.</span>
+          </h1>
+
+          <p class="hero-description">
+            Need help preparing salary slips for your business or employment
+            records? Get in touch for professional salary slip preparation
+            assistance, with a clean layout and organized documentation.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn-primary" href="#contact">
+              Request a Salary Slip <span aria-hidden="true">↗</span>
+            </a>
+            <a class="btn-secondary" href="login.html">
+              Access Your Account <span aria-hidden="true">→</span>
+            </a>
+          </div>
+
+          <p class="hero-note">
+            <span>✦</span> Clear communication. Professional presentation.
+          </p>
+        </div>
+
+        <div class="preview-wrap" aria-label="Illustrative salary slip design">
+          <div class="preview-glow"></div>
+
+          <div class="floating-tag tag-one">
+            <div class="tag-icon">▤</div>
+            <div>
+              <strong>Clean Layout</strong>
+              Professional presentation
+            </div>
+          </div>
+
+          <div class="slip">
+            <div class="slip-top">
+              <div class="slip-logo">S.</div>
+              <div class="slip-company">
+                SALARY STATEMENT
+                <small>Illustrative document preview</small>
+              </div>
+              <div class="slip-label">PAYROLL</div>
+            </div>
+
+            <div class="slip-period">
+              Salary period: <strong>Monthly</strong>
+            </div>
+
+            <div class="slip-person">
+              <div class="slip-field">
+                <small>EMPLOYEE NAME</small>
+                <strong>Employee Name</strong>
+              </div>
+              <div class="slip-field">
+                <small>DESIGNATION</small>
+                <strong>Job Title</strong>
+              </div>
+              <div class="slip-field">
+                <small>EMPLOYEE ID</small>
+                <strong>EMP-0001</strong>
+              </div>
+              <div class="slip-field">
+                <small>PAYMENT PERIOD</small>
+                <strong>Monthly</strong>
+              </div>
+            </div>
+
+            <div class="slip-table-title">EARNINGS & DEDUCTIONS</div>
+
+            <div class="slip-row">
+              <span>Basic Salary</span><b>₹ XX,XXX</b>
+            </div>
+            <div class="slip-row">
+              <span>Allowances</span><b>₹ X,XXX</b>
+            </div>
+            <div class="slip-row">
+              <span>Applicable Deductions</span><b>₹ X,XXX</b>
+            </div>
+
+            <div class="slip-total">
+              <div><small>NET PAY</small><span>Monthly salary</span></div>
+              <strong>₹ XX,XXX</strong>
+            </div>
+
+            <div class="slip-footer">
+              Illustrative preview — actual details depend on the supplied records.
+            </div>
+          </div>
+
+          <div class="floating-tag tag-two">
+            <div class="tag-icon">✓</div>
+            <div>
+              <strong>Organized Records</strong>
+              Details presented clearly
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="trust-strip">
+      <div class="container trust-grid">
+        <div class="trust-item">
+          <span class="trust-symbol">▤</span>
+          <div>
+            <strong>Professional Formatting</strong>
+            <small>Clear, structured documents</small>
+          </div>
+        </div>
+        <div class="trust-item">
+          <span class="trust-symbol">◎</span>
+          <div>
+            <strong>Personal Assistance</strong>
+            <small>Contact directly for enquiries</small>
+          </div>
+        </div>
+        <div class="trust-item">
+          <span class="trust-symbol">↗</span>
+          <div>
+            <strong>Simple Communication</strong>
+            <small>Discuss your requirements</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="content-section" id="services">
+      <div class="container">
+        <div class="section-heading">
+          <div class="section-kicker">What We Offer</div>
+          <h2>Salary documentation, <span class="gold-text">simplified.</span></h2>
+          <p>
+            Get in touch to discuss your documentation requirements and
+            the format that works for your organization.
+          </p>
+        </div>
+
+        <div class="services-grid">
+          <article class="service-card">
+            <div class="service-icon">▤</div>
+            <h3>Salary Slip Preparation</h3>
+            <p>
+              Professionally formatted salary slips based on accurate
+              employment and payroll information supplied by you.
+            </p>
+          </article>
+
+          <article class="service-card">
+            <div class="service-icon">▦</div>
+            <h3>Business Documentation</h3>
+            <p>
+              Structured salary documentation for businesses that need
+              consistent presentation across employee records.
+            </p>
+          </article>
+
+          <article class="service-card">
+            <div class="service-icon">⇩</div>
+            <h3>Digital Documents</h3>
+            <p>
+              Discuss digital document formats and PDF delivery suited
+              to your requirements.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section process-section" id="process">
+      <div class="container">
+        <div class="section-heading">
+          <div class="section-kicker">The Process</div>
+          <h2>Three steps. <span class="gold-text">One clear process.</span></h2>
+          <p>
+            Start with a conversation about what you need.
+          </p>
+        </div>
+
+        <div class="steps-grid">
+          <article class="step">
+            <div class="step-number">01</div>
+            <h3>Get in Touch</h3>
+            <p>
+              Contact me through Instagram or email and explain the
+              salary documentation you need.
+            </p>
+          </article>
+
+          <article class="step">
+            <div class="step-number">02</div>
+            <h3>Share Requirements</h3>
+            <p>
+              Discuss the required format, relevant details, timeline
+              and any applicable charges before proceeding.
+            </p>
+          </article>
+
+          <article class="step">
+            <div class="step-number">03</div>
+            <h3>Review Your Document</h3>
+            <p>
+              Review the prepared document for accuracy against the
+              genuine payroll information provided.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-section" id="contact">
+      <div class="container">
+        <div class="contact-box">
+          <div>
+            <div class="section-kicker">Let's Connect</div>
+            <h2 style="margin-top:15px">
+              Need a salary slip?<br>
+              <span class="gold-text">Let's talk.</span>
+            </h2>
+            <p>
+              Have a question or need salary slip preparation assistance?
+              Contact me directly using either option. Share sensitive
+              employee or payroll documents only through an agreed,
+              appropriate channel.
+            </p>
+          </div>
+
+          <div class="contact-actions">
+            <a class="btn-primary"
+              href="https://www.instagram.com/sumiit__rajputt/"
+              target="_blank" rel="noopener noreferrer">
+              Instagram ↗
+            </a>
+            <a class="btn-secondary"
+              href="mailto:sumiit.singh@zohomail.in?subject=Salary%20Slip%20Enquiry">
+              Email Me ↗
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <a class="brand" href="#home">
+        <div class="brand-icon">S.</div>
+        <div>
+          <div class="brand-name">Salary<span>Craft</span></div>
+          <span class="brand-caption">Professional Services</span>
+        </div>
+      </a>
+
+      <div class="footer-copy">
+        © <span id="year"></span> SalaryCraft. All rights reserved.
+      </div>
+
+      <div class="social-links">
+        <a href="https://www.instagram.com/sumiit__rajputt/"
+           target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+        <a href="mailto:sumiit.singh@zohomail.in">Email ↗</a>
+        <a href="login.html">Login ↗</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const navLinks = document.getElementById("navLinks");
+
+    menuToggle.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      menuToggle.setAttribute(
+        "aria-label",
+        isOpen ? "Close navigation menu" : "Open navigation menu"
+      );
+      menuToggle.textContent = isOpen ? "×" : "☰";
+    });
+
+    navLinks.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        navLinks.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.setAttribute("aria-label", "Open navigation menu");
+        menuToggle.textContent = "☰";
+      });
+    });
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+  </script>
+</body>
+</html>

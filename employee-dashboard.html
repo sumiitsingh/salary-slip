@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Salary Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #f4f6fb;
+      color: #172033;
+      font-family: Arial, sans-serif;
+    }
+
+    .wrap { width: min(1100px, 94%); margin: 28px auto; }
+    .topbar, .company-head, .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .topbar { margin-bottom: 22px; }
+    h1 { font-size: 27px; margin: 0 0 7px; }
+    h2 { font-size: 19px; margin: 0 0 16px; }
+    p { line-height: 1.55; }
+    .muted { color: #64748b; }
+
+    .card {
+      background: white;
+      border-radius: 13px;
+      padding: 22px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 18px rgba(15, 23, 42, .055);
+      min-width: 0;
+    }
+
+    .company-logo {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 5px;
+      background: white;
+    }
+
+    .company-name { font-size: 22px; font-weight: 700; }
+    .company-info { overflow-wrap: anywhere; line-height: 1.8; }
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .detail {
+      padding: 13px;
+      background: #f8fafc;
+      border-radius: 8px;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .detail small {
+      display: block;
+      color: #64748b;
+      margin-bottom: 7px;
+    }
+
+    .detail strong { overflow-wrap: anywhere; }
+
+    button, .btn {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 15px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .primary { background: #1d4ed8; color: white; }
+    .secondary { background: #e8edf5; color: #172033; }
+    .danger { background: #dc2626; color: white; }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+
+    .table-wrap { overflow-x: auto; width: 100%; }
+    table { width: 100%; border-collapse: collapse; min-width: 650px; }
+
+    th, td {
+      padding: 13px 10px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th { background: #f8fafc; color: #475569; }
+    td input[type="checkbox"] { width: 17px; height: 17px; }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .notice {
+      display: none;
+      padding: 13px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      overflow-wrap: anywhere;
+    }
+
+    .notice.error { display: block; background: #fee2e2; color: #991b1b; }
+    .notice.success { display: block; background: #dcfce7; color: #166534; }
+    .notice.info { display: block; background: #dbeafe; color: #1e40af; }
+    .empty { padding: 22px 8px; color: #64748b; text-align: center; }
+
+    .company-logo-error {
+      display: none;
+      color: #b91c1c;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 650px) {
+      .wrap { margin: 16px auto; }
+      .card { padding: 16px; }
+      h1 { font-size: 23px; }
+      .details-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .company-logo { width: 75px; height: 75px; }
+    }
+
+    @media (max-width: 380px) {
+      .details-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <header class="topbar">
+      <div>
+        <h1>My Salary Dashboard</h1>
+        <p class="muted" id="welcomeText">Your profile and salary slips</p>
+      </div>
+      <button type="button" class="danger" id="logoutBtn">Logout</button>
+    </header>
+
+    <div id="message" class="notice" role="status" aria-live="polite"></div>
+
+    <section class="card">
+      <div class="company-head">
+        <div>
+          <div class="company-name" id="companyName">Loading company...</div>
+          <p class="muted" style="margin-bottom:0">Your employer</p>
+        </div>
+
+        <div>
+          <img id="companyLogo" class="company-logo"
+               alt="Company logo" hidden>
+          <div id="logoError" class="company-logo-error">
+            Company logo could not be loaded. Please contact the administrator.
+          </div>
+        </div>
+      </div>
+
+      <div class="company-info" style="margin-top:15px">
+        <div><strong>Address:</strong> <span id="companyAddress">—</span></div>
+        <div><strong>GSTIN:</strong> <span id="companyGstin">—</span></div>
+        <div><strong>TAN:</strong> <span id="companyTan">—</span></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>My Details</h2>
+      <div class="details-grid">
+        <div class="detail"><small>Full Name</small><strong id="employeeName">—</strong></div>
+        <div class="detail"><small>Employee Code</small><strong id="employeeCode">—</strong></div>
+        <div class="detail"><small>Email</small><strong id="employeeEmail">—</strong></div>
+        <div class="detail"><small>Designation</small><strong id="employeeDesignation">—</strong></div>
+        <div class="detail"><small>Department</small><strong id="employeeDepartment">—</strong></div>
+        <div class="detail"><small>Joining Date</small><strong id="employeeJoiningDate">—</strong></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <h2>My Salary Slips</h2>
+        <span class="muted" id="slipCount">0 slips</span>
+      </div>
+
+      <div class="toolbar">
+        <button type="button" class="secondary" id="selectAllBtn">Select all</button>
+        <button type="button" class="secondary" id="clearSelectionBtn">Clear selection</button>
+        <button type="button" class="primary" id="downloadSelectedBtn" disabled>
+          Download selected PDFs
+        </button>
+      </div>
+
+      <p class="muted">
+        Select one or more salary months to download their PDF slips.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Select</th>
+              <th>Salary Month</th>
+              <th>Gross Salary</th>
+              <th>Deductions</th>
+              <th>Net Salary</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="slipsTable">
+            <tr><td colspan="6" class="empty">Loading your salary slips...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="employee-dashboard.js"></script>
+</body>
+</html>

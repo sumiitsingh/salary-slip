@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salary Portal | Sign In</title>
+  <link rel="stylesheet" href="style.css">
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script></script>
+  <script src="supabase.js" defer></script>
+  <script src="login.js" defer></script>
+</head>
+<body class="auth-page">
+  <main class="auth-card">
+    <div class="brand-mark">SP</div>
+    <p class="eyebrow">SALARY MANAGEMENT</p>
+    <h1>Welcome back</h1>
+    <p class="muted">Sign in to access your salary portal.</p>
+
+    <form id="loginForm">
+      <label for="email">Email address</label>
+      <input id="email" type="email" placeholder="Enter your email"
+             autocomplete="username" required>
+
+      <label for="password">Password</label>
+      <input id="password" type="password" placeholder="Enter your password"
+             autocomplete="current-password" required>
+
+      <button id="loginBtn" type="submit">Sign In</button>
+      <p id="message" class="message" role="status"></p>
+    </form>
+
+    <div class="auth-footer">
+      Employee account not activated yet?
+      <a href="employee-activation.html">Activate account</a>
+    </div>
+  </main>
+</body>
+</html>

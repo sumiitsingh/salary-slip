@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Activation | Salary Portal</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+      background: #f3f6fc;
+      font-family: Arial, sans-serif;
+      color: #172033;
+    }
+    .activation-card {
+      width: 100%;
+      max-width: 440px;
+      padding: 30px;
+      box-sizing: border-box;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 35px rgba(20, 40, 80, .09);
+    }
+    .brand {
+      color: #2459d3;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 22px;
+    }
+    h1 { font-size: 26px; margin: 0 0 10px; }
+    .intro { color: #69758a; font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+    .field { margin-bottom: 17px; }
+    label { display: block; margin-bottom: 7px; font-size: 13px; font-weight: 600; }
+    input {
+      width: 100%;
+      padding: 12px;
+      box-sizing: border-box;
+      border: 1px solid #d7deea;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+    button {
+      width: 100%;
+      padding: 13px;
+      background: #2459d3;
+      color: white;
+      border: 0;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button:disabled { opacity: .6; cursor: wait; }
+    .message { font-size: 14px; line-height: 1.5; margin-top: 15px; }
+    .error { color: #c62828; }
+    .success { color: #16804a; }
+    .links { text-align: center; margin-top: 20px; font-size: 14px; }
+    a { color: #2459d3; text-decoration: none; }
+    .hint { font-size: 12px; color: #69758a; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <main class="activation-card">
+    <div class="brand">SALARY PORTAL</div>
+    <h1>Activate Employee Account</h1>
+    <p class="intro">
+      Enter the email address registered by your admin and the activation
+      code provided to you. Create a password to access your salary slips.
+    </p>
+
+    <form id="activationForm">
+      <div class="field">
+        <label for="email">Employee Email</label>
+        <input id="email" type="email" required autocomplete="email">
+      </div>
+
+      <div class="field">
+        <label for="code">Activation Code</label>
+        <input id="code" type="text" required
+          placeholder="e.g. EMP-ABC123DEF456"
+          autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label for="password">Create Password</label>
+        <input id="password" type="password" required minlength="8"
+          autocomplete="new-password">
+        <div class="hint">Minimum 8 characters.</div>
+      </div>
+
+      <div class="field">
+        <label for="confirmPassword">Confirm Password</label>
+        <input id="confirmPassword" type="password" required minlength="8"
+          autocomplete="new-password">
+      </div>
+
+      <button id="activateBtn" type="submit">Activate Account</button>
+      <p id="message" class="message" role="status"></p>
+    </form>
+
+    <div class="links">
+      Already activated? <a href="login.html">Sign in</a>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="employee-activation.js"></script>
+</body>
+</html>
